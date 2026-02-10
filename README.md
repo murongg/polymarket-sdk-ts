@@ -26,6 +26,10 @@ This regenerates:
 - `src/sdk/data/generated/*`
 - `src/sdk/bridge/generated/*`
 
+## Automated SDK updates
+
+SDK updates and releases are automated via GitHub Actions and run daily.
+
 ## Project structure
 
 ```text
