@@ -1,0 +1,39 @@
+{
+  "name": "polymarket-sdk-ts",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for Polymarket Gamma, Data, and Bridge APIs",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "generate:sdk": "bun generate-sdks.ts",
+    "build": "tsup src/sdk/index.ts --format esm,cjs --dts --sourcemap --clean --out-dir dist",
+    "check": "tsc --noEmit",
+    "prepack": "pnpm run check && pnpm run build"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "yaml": "^2.8.2"
+  }
+}
