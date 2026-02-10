@@ -3,6 +3,14 @@ import { parse as parseYaml } from "yaml";
 
 const SPECS = [
   {
+    moduleName: "clob",
+    className: "ClobSDK",
+    operationTypeName: "ClobOperationId",
+    defaultBaseUrlConst: "DEFAULT_CLOB_BASE_URL",
+    defaultBaseUrl: "https://clob.polymarket.com",
+    sourceUrl: "https://docs.polymarket.com/api-reference/clob-subset-openapi.yaml",
+  },
+  {
     moduleName: "gamma",
     className: "GammaSDK",
     operationTypeName: "GammaOperationId",

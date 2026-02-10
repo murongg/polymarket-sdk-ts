@@ -6,13 +6,14 @@ This file gives coding agents project-specific guidance for this repository.
 
 - Package: `polymarket-sdk-ts`
 - Goal: publish a TypeScript SDK for Polymarket APIs
-- Covered modules: `gamma`, `data`, `bridge`
+- Covered modules: `clob`, `gamma`, `data`, `bridge`
 - Source of truth for API surfaces: Polymarket API Reference OpenAPI specs
 
 ## Repository structure
 
 - `generate-sdks.ts`: fetches OpenAPI docs and generates SDK code
 - `src/sdk/core.ts`: shared HTTP client and error handling
+- `src/sdk/clob/generated/*`: generated CLOB client and types
 - `src/sdk/gamma/generated/*`: generated Gamma client and types
 - `src/sdk/data/generated/*`: generated Data client and types
 - `src/sdk/bridge/generated/*`: generated Bridge client and types
