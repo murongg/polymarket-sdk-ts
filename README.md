@@ -1,12 +1,6 @@
-# polymarket SDK
+# polymarket-sdk-ts
 
-Polymarket API SDK generated from docs in `https://docs.polymarket.com/api-reference`.
-
-Generated modules:
-- CLOB (`clob.polymarket.com`)
-- Gamma (`gamma-api.polymarket.com`)
-- Data (`data-api.polymarket.com`)
-- Bridge (`bridge.polymarket.com`)
+TypeScript SDK for Polymarket public APIs.
 
 ## Install
 
@@ -14,41 +8,7 @@ Generated modules:
 pnpm add polymarket-sdk-ts
 ```
 
-## Regenerate all modules
-
-```bash
-pnpm run generate:sdk
-```
-
-This regenerates:
-- `src/sdk/clob/generated/*`
-- `src/sdk/gamma/generated/*`
-- `src/sdk/data/generated/*`
-- `src/sdk/bridge/generated/*`
-
-## Automated SDK updates
-
-SDK updates and releases are automated via GitHub Actions and run daily.
-
-## Project structure
-
-```text
-src/
-  sdk/
-    core.ts                # shared request/error base
-    index.ts               # unified exports + PolymarketSDK facade
-    clob/
-      generated/
-    gamma/
-      generated/
-    data/
-      generated/
-    bridge/
-      generated/
-generate-sdks.ts           # OpenAPI -> SDK generator
-```
-
-## Usage
+## Quick start
 
 ```ts
 import { PolymarketSDK } from "polymarket-sdk-ts";
@@ -56,16 +16,51 @@ import { PolymarketSDK } from "polymarket-sdk-ts";
 const sdk = new PolymarketSDK();
 
 const orderBook = await sdk.clob.getBook({ token_id: "1234567890" });
-const market = await sdk.gamma.getMarketBySlug({ slug: "will-btc-be-above-100k-on-december-31" });
+const market = await sdk.gamma.getMarketBySlug({
+  slug: "will-btc-be-above-100k-on-december-31",
+});
 const health = await sdk.data.getDataApiHealth();
 const assets = await sdk.bridge.getSupportedAssets();
 ```
 
-## Build and publish
+## Available API modules
 
-```bash
-pnpm install
-pnpm run generate:sdk
-pnpm run build
-pnpm publish --access public
+- `sdk.clob` (CLOB market data, pricing, spreads)
+- `sdk.gamma` (markets, events, tags, series)
+- `sdk.data` (positions, activity, analytics)
+- `sdk.bridge` (deposit, withdrawal, asset routing)
+
+## Configure endpoints or headers
+
+```ts
+import { PolymarketSDK } from "polymarket-sdk-ts";
+
+const sdk = new PolymarketSDK({
+  clob: {
+    baseUrl: "https://clob.polymarket.com",
+    headers: {
+      "x-client": "my-app",
+    },
+  },
+});
 ```
+
+## Error handling
+
+All requests throw `PolymarketApiError` for non-2xx responses.
+
+```ts
+import { PolymarketApiError } from "polymarket-sdk-ts";
+
+try {
+  // request...
+} catch (error) {
+  if (error instanceof PolymarketApiError) {
+    console.error(error.status, error.statusText, error.body);
+  }
+}
+```
+
+## API reference
+
+- Official docs: `https://docs.polymarket.com/api-reference`
