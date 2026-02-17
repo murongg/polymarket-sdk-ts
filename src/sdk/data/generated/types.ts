@@ -2,7 +2,7 @@
 // This file is auto-generated from https://docs.polymarket.com/api-reference/data-api-openapi.yaml
 // Run `bun generate-sdks.ts` to regenerate.
 
-export type DataOperationId = "getActivity" | "getClosedPositions" | "getDataApiHealth" | "getHolders" | "getLiveVolume" | "getOi" | "getOther" | "getPositions" | "getRevisions" | "getTraded" | "getTrades" | "getV1AccountingSnapshot" | "getV1BuildersLeaderboard" | "getV1BuildersVolume" | "getV1Leaderboard" | "getValue";
+export type DataOperationId = "getActivity" | "getClosedPositions" | "getDataApiHealth" | "getHolders" | "getLiveVolume" | "getOi" | "getOther" | "getPositions" | "getRevisions" | "getTraded" | "getTrades" | "getV1AccountingSnapshot" | "getV1BuildersLeaderboard" | "getV1BuildersVolume" | "getV1Leaderboard" | "getV1MarketPositions" | "getValue";
 
 export type Activity = {
   proxyWallet?: Address;
@@ -87,6 +87,24 @@ export type LiveVolume = {
   total?: number;
   markets?: MarketVolume[];
 };
+export type MarketPositionV1 = {
+  proxyWallet?: Address;
+  name?: string;
+  profileImage?: string;
+  verified?: boolean;
+  asset?: string;
+  conditionId?: Hash64;
+  avgPrice?: number;
+  size?: number;
+  currPrice?: number;
+  currentValue?: number;
+  cashPnl?: number;
+  totalBought?: number;
+  realizedPnl?: number;
+  totalPnl?: number;
+  outcome?: string;
+  outcomeIndex?: number;
+};
 export type MarketVolume = {
   market?: Hash64;
   value?: number;
@@ -94,6 +112,10 @@ export type MarketVolume = {
 export type MetaHolder = {
   token?: string;
   holders?: Holder[];
+};
+export type MetaMarketPositionV1 = {
+  token?: string;
+  positions?: MarketPositionV1[];
 };
 export type OpenInterest = {
   market?: Hash64;
@@ -280,6 +302,16 @@ export type GetV1LeaderboardParams = {
   offset?: number;
   user?: Address;
   userName?: string;
+};
+
+export type GetV1MarketPositionsParams = {
+  market: Hash64;
+  user?: Address;
+  status?: "OPEN" | "CLOSED" | "ALL";
+  sortBy?: "TOKENS" | "CASH_PNL" | "REALIZED_PNL" | "TOTAL_PNL";
+  sortDirection?: "ASC" | "DESC";
+  limit?: number;
+  offset?: number;
 };
 
 export type GetValueParams = {

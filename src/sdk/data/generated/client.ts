@@ -286,6 +286,27 @@ export class DataSDK extends BaseApiClient {
     }) as Promise<T.TraderLeaderboardEntry[]>;
   }
 
+  async getV1MarketPositions(params: T.GetV1MarketPositionsParams, init?: RequestInit): Promise<T.MetaMarketPositionV1[]> {
+    const query = {
+      market: params.market,
+      user: params.user,
+      status: params.status,
+      sortBy: params.sortBy,
+      sortDirection: params.sortDirection,
+      limit: params.limit,
+      offset: params.offset,
+    };
+
+    return this.request({
+      method: "GET",
+      path: "/v1/market-positions",
+      pathParams: undefined,
+      query,
+      body: undefined,
+      init,
+    }) as Promise<T.MetaMarketPositionV1[]>;
+  }
+
   async getValue(params: T.GetValueParams, init?: RequestInit): Promise<T.Value[]> {
     const query = {
       user: params.user,
