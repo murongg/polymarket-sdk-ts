@@ -1,0 +1,86 @@
+name: Manual Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: Version bump type
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: patch
+
+permissions:
+  contents: write
+
+concurrency:
+  group: manual-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Bump package version
+        id: version
+        run: |
+          npm version "${{ inputs.release_type }}" --no-git-tag-version
+          VERSION=$(node -p "require('./package.json').version")
+
+          while git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null || git ls-remote --exit-code --tags origin "refs/tags/v$VERSION" >/dev/null; do
+            echo "Tag v$VERSION already exists, bumping again"
+            npm version "${{ inputs.release_type }}" --no-git-tag-version
+            VERSION=$(node -p "require('./package.json').version")
+          done
+
+          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json
+          git commit -m "chore: release v${{ steps.version.outputs.value }}"
+          git tag "v${{ steps.version.outputs.value }}"
+          git push origin HEAD
+          git push origin "v${{ steps.version.outputs.value }}"
+
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.value }}
+          generate_release_notes: true
