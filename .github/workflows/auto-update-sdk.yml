@@ -32,6 +32,7 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
+          registry-url: https://registry.npmjs.org
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -59,6 +60,13 @@ jobs:
         run: |
           npm version patch --no-git-tag-version
           VERSION=$(node -p "require('./package.json').version")
+
+          while git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null || git ls-remote --exit-code --tags origin "refs/tags/v$VERSION" >/dev/null; do
+            echo "Tag v$VERSION already exists, bumping again"
+            npm version patch --no-git-tag-version
+            VERSION=$(node -p "require('./package.json').version")
+          done
+
           echo "value=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Commit and tag
